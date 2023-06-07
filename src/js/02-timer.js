@@ -3,10 +3,10 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 const datePicker = document.querySelector('#datetime-picker');
 const refs = {
-    days: document.querySelector('[data-days]'),
-    hours: document.querySelector('[data-hours]'),
-    minutes: document.querySelector('[data-minutes]'),
-    seconds: document.querySelector('[data-seconds]'),
+  days: document.querySelector('[data-days]'),
+  hours: document.querySelector('[data-hours]'),
+  minutes: document.querySelector('[data-minutes]'),
+  seconds: document.querySelector('[data-seconds]'),
 };
 
 const startButton = document.querySelector('[data-start]');
@@ -23,19 +23,16 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] < Date.now()) {
-                 Notiflix.Notify.failure(
-                   'Please choose a date in the future',
-                     {
-                      timeout: 3000,
-                     },
-                   );
-               } else {
-                    startButton.disabled = false;
-                    selectedDate = selectedDates[0];
-                    console.log(selectedDate);
-               };
-           },
-         };
+      Notiflix.Notify.failure('Please choose a date in the future', {
+        timeout: 3000,
+      });
+    } else {
+      startButton.disabled = false;
+      selectedDate = selectedDates[0];
+      console.log(selectedDate);
+    }
+  },
+};
 
 function dateCalendar() {}
 dateCalendar();
@@ -43,33 +40,34 @@ dateCalendar();
 flatpickr(datePicker, options);
 
 function startСountdown() {
-    timer.start();
-};
+  timer.start();
+}
 dateCalendar();
 
 const timer = {
-    isActive: false,
-    intervalId: null,
-    start() {
-        if(this.isActive) {
-            return;
-        }
-      this.intervalId = setInterval(() => {
-        const currentTime = Date.now();
-        this.isActive = true;
-        const deltaTime = convertMs(selectedDate - currentTime);
-        console.log(deltaTime);
-        updateClockFace(deltaTime);
-        if (deltaTime.seconds <= 0) {
-          this.stop();
-        };
-      }, 1000);
-    },
-    stop() {
-      clearInterval(this.intervalId);
-      this.isActive = false;
+  isActive: false,
+  intervalId: null,
+  start() {
+    if (this.isActive) {
+      return;
     }
-  };
+    this.intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      this.isActive = true;
+      const deltaTime = convertMs(selectedDate - currentTime);
+      console.log(deltaTime);
+      updateClockFace(deltaTime);
+      if (deltaTime.seconds <= 0) {
+        this.stop();
+        startButton.disabled = true;
+      }
+    }, 1000);
+  },
+  stop() {
+    clearInterval(this.intervalId);
+    this.isActive = false;
+  },
+};
 
 function updateClockFace({ days, hours, minutes, seconds }) {
   refs.days.textContent = days;
